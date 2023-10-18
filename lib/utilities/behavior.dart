@@ -1,146 +1,80 @@
-import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:mb/components/figure_component.dart';
-import 'package:mb/constants.dart';
 
 class Behavior {
-  Vector2 velocity = Vector2(0, 0);
-  Behavior({required this.velocity});
+  double minDist;
+  double maxSpeed;
+  double maxForce;
+
+  mapRange(a1, a2, b1, b2, s) => (b1 + (s - a1) * (b2 - b1) / (a2 - a1));
+  Behavior(
+      {this.minDist =0, this.maxSpeed=0,this.maxForce=0});
   Vector2 move(double dt) {
-    return velocity;
+    return Vector2(0, 0);
   }
 }
 
-mapRange(a1, a2, b1, b2, s) => (b1 + (s - a1) * (b2 - b1) / (a2 - a1));
-
-class SeekBehavior extends Behavior {
-  double minDist = worldTileSize * 1.5;
-  double maxSpeed = worldTileSize * 2;
-
+class GoToBehavior extends Behavior {
   FigureComponent figure;
-  FigureComponent targetFigure;
+  Vector2 target;
 
-  SeekBehavior(
+  GoToBehavior(
       {required this.figure,
-      required this.targetFigure,
-      required this.maxSpeed,
-      required this.minDist,
-      required super.velocity});
+      required this.target,
+      required super.minDist,
+      required super.maxSpeed,
+      required super.maxForce});
 
   @override
   Vector2 move(double dt) {
-    double dist = figure.position.distanceTo(targetFigure.position);
     double speed = maxSpeed;
-    Vector2 desired = Vector2(0, 0);
-    if (dist < minDist) {
-      speed = mapRange(maxSpeed, 0, minDist, 0, dist / 5);
-      desired =
-          (targetFigure.position - figure.position).normalized() * speed * dt;
-    }
-    Vector2 steering = desired - velocity;
-    steering.clampScalar(0, maxSpeed);
-    figure.lookAt(targetFigure.position);
-    return steering;
-  }
-}
-
-class FleeBehavior extends Behavior {
-  double maxSpeed = worldTileSize * 2;
-  double minDist = worldTileSize * 4;
-
-  FigureComponent figure;
-  FigureComponent targetFigure;
-
-  FleeBehavior(
-      {required this.figure,
-      required this.targetFigure,
-      required this.maxSpeed,
-      required this.minDist,
-      required super.velocity});
-
-  @override
-  Vector2 move(double dt) {
-    double dist = figure.position.distanceTo(targetFigure.position);
-    Vector2 steering = Vector2(0, 0);
-    if (dist < minDist) {
-      Vector2 desired = (figure.position - targetFigure.position).normalized() *
-          maxSpeed *
-          dt;
-      steering = desired - velocity;
-      steering.clampScalar(0, maxSpeed);
-      figure.lookAt(targetFigure.position);
-      figure.angle += pi;
-    }
+    Vector2 desired = (target - figure.position).normalized() * speed * dt;
+    Vector2 steering = (desired - figure.velocity);
+    steering.clampScalar(-maxForce, maxForce);
     return steering;
   }
 }
 
 class PursueBehavior extends Behavior {
-  double minDist = worldTileSize * 1.5;
-  double maxSpeed = worldTileSize * 2;
-  double maxForce = worldTileSize / 10;
-
   FigureComponent figure;
   FigureComponent targetFigure;
 
   PursueBehavior(
       {required this.figure,
       required this.targetFigure,
-      required this.maxSpeed,
-      required this.minDist,
-      required super.velocity});
+      required super.minDist,
+      required super.maxSpeed,
+      required super.maxForce});
 
   @override
   Vector2 move(double dt) {
-    double dist = figure.position.distanceTo(targetFigure.position);
     double speed = maxSpeed;
-    Vector2 desired = Vector2(0, 0);
-    if (dist < minDist) {
-      speed = mapRange(maxSpeed, 0, minDist, 0, dist / 5);
-      desired = (targetFigure.position +
-                  targetFigure.behavior.velocity -
-                  figure.position)
-              .normalized() *
-          speed *
-          dt;
-    }
-    Vector2 steering = desired - velocity;
-    steering.clampScalar(0, maxSpeed);
-    figure.lookAt(targetFigure.position);
+    Vector2 desired =
+        (targetFigure.position - figure.position).normalized() * speed * dt;
+    Vector2 steering = (desired - figure.velocity);
+    steering.clampScalar(-maxForce, maxForce);
     return steering;
   }
 }
 
 class EvadeBehavior extends Behavior {
-  double maxSpeed = worldTileSize * 2;
-  double minDist = worldTileSize * 4;
-
   FigureComponent figure;
   FigureComponent targetFigure;
 
   EvadeBehavior(
       {required this.figure,
       required this.targetFigure,
-      required this.maxSpeed,
-      required this.minDist,
-      required super.velocity});
+      required super.minDist,
+      required super.maxSpeed,
+      required super.maxForce});
 
   @override
   Vector2 move(double dt) {
-    double dist = figure.position.distanceTo(targetFigure.position);
-    Vector2 steering = Vector2(0, 0);
-    if (dist < minDist) {
-      Vector2 desired = (figure.position -
-                  targetFigure.position +
-                  targetFigure.behavior.velocity)
-              .normalized() *
-          maxSpeed *
-          dt;
-      steering = desired - velocity;
-      steering.clampScalar(0, maxSpeed);
-      figure.lookAt(targetFigure.position);
-      figure.angle += pi;
-    }
+    double speed = maxSpeed;
+    Vector2 desired =
+        (-targetFigure.position + figure.position).normalized() * speed * dt;
+    Vector2 steering = (desired - figure.velocity);
+    steering.clampScalar(-maxForce, maxForce);
     return steering;
   }
 }

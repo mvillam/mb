@@ -25,5 +25,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/tiles/bm_map.tmx
-    - assets/images/
+    - assets/images/tile.png
 

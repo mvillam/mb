@@ -12,7 +12,7 @@ import 'constants.dart';
 
 class MBWorld extends World with HasGameRef<MBGame>, HasCollisionDetection {
   late TiledComponent map;
-  Vector2 size =Vector2(0, 0);
+  Vector2 size = Vector2(0, 0);
   List<FigureComponent> figures = [];
 
   Vector2 toWorldPosition(double x, double y) => Vector2(
@@ -28,6 +28,7 @@ class MBWorld extends World with HasGameRef<MBGame>, HasCollisionDetection {
         Assets.tiles.bmMap, Vector2.all(worldTileSize),
         prefix: '');
     map.priority = 0;
+    map.anchor = Anchor.topLeft;
     size = Vector2(
       map.tileMap.map.width * worldTileSize,
       map.tileMap.map.height * worldTileSize,
@@ -35,34 +36,46 @@ class MBWorld extends World with HasGameRef<MBGame>, HasCollisionDetection {
     add(map);
     figures = [];
 
-    Vector2 position = Vector2(worldTileSize / 2, worldTileSize / 2);
-    Vector2 target_position =
-        toWorldPosition(rnd.nextDouble() * 10, rnd.nextDouble() * 10);
-
+    Vector2 position_0 =
+        toWorldPosition(rnd.nextDouble() * 50,rnd.nextDouble() * 50);
     FigureComponent figure_0 =
-        FigureComponent.red(position, Vector2.all(worldTileSize));
-
-    FigureComponent figure_1 =
-        FigureComponent.blue(target_position, Vector2.all(worldTileSize));
-
-    figure_0.behavior = PursueBehavior(
-        figure: figure_0,
-        velocity: Vector2(0, 0),
-        targetFigure: figure_1,
-        maxSpeed: worldTileSize * 4, minDist: worldTileSize*30);
-
-    figure_1.behavior = EvadeBehavior(
-        figure: figure_1,
-        velocity: Vector2(0, 0),
-        targetFigure: figure_0,
-        maxSpeed: worldTileSize * 4, minDist: worldTileSize*6);
-
+        FigureComponent.red(position_0, Vector2.all(worldTileSize));
+    figure_0.maxForce =1;
+    figure_0.maxVelocity =worldTileSize*8;
+    figure_0.createGoToCenterBehavior(worldTileSize*10,worldTileSize*10);
     add(figure_0);
-    add(figure_1);
-
     figures.add(figure_0);
-    figures.add(figure_1);
-    game.camera.follow(figures[0]);
+
+
+    for (int i = 0; i < 100; i++) {
+      Vector2 position_i =
+          toWorldPosition(rnd.nextDouble() * 100, rnd.nextDouble() * 100);
+      FigureComponent figure_i =
+          FigureComponent.blue(position_i, Vector2.all(worldTileSize));
+
+      PursueBehavior pb_i_0 = PursueBehavior(
+          figure: figure_i,
+          targetFigure: figure_0,
+          maxSpeed: worldTileSize * (Random().nextDouble() * 10 + 1),
+          minDist: worldTileSize * 20,
+         maxForce: 0.5);
+
+     /* EvadeBehavior eb_0_i = EvadeBehavior(
+          figure: figure_0,
+          targetFigure: figure_i,
+          maxSpeed: worldTileSize * (Random().nextDouble() * 10 + 1),
+          minDist: worldTileSize * 20, maxForce: 100,
+          );
+
+      figure_0.behaviors.add(eb_0_i);*/
+      figure_i.behaviors.add(pb_i_0);
+      add(figure_i);
+      figures.add(figure_i);
+    }
+
+    game.camera.viewfinder.zoom =0.25;
+    game.camera.moveTo(Vector2(maxWorldSizeX / 2, maxWorldSizeY / 2));
+    //game.camera.follow(figures[0]);
   }
 
   void setCameraBounds(Vector2 gameSize) {

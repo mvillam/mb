@@ -5,8 +5,8 @@
     },
     "activeFile": "assets/tiles/bm_map.tmx",
     "expandedProjectPaths": [
-        "assets/tiles",
         ".",
+        "assets/tiles",
         "assets"
     ],
     "file.lastUsedOpenFilter": "Todos los archivos (*)",
@@ -16,12 +16,15 @@
             "scaleInEditor": 3
         },
         "assets/tiles/bm_map.tmx": {
-            "scale": 0.75,
+            "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 386.66666666666674,
-                "y": 201.33333333333331
+                "x": 642,
+                "y": -54
             }
+        },
+        "assets/tiles/bm_map.tmx#tile": {
+            "scaleInDock": 1
         },
         "assets/tiles/bm_map.tmx#tmw_desert_spacing": {
             "scaleInDock": 1,
@@ -29,6 +32,7 @@
         }
     },
     "last.exportedFilePath": "C:/Users/migue/OneDrive/Documentos/mb/assets/tiles",
+    "last.externalTilesetPath": "C:/Users/migue/OneDrive/Documentos/mb/assets/images",
     "last.imagePath": "C:/Users/migue/OneDrive/Documentos/mb/assets/images",
     "map.height": 100,
     "map.lastUsedExportFilter": "Archivos de mapas de Tiled (*.tmx *.xml)",
@@ -43,5 +47,6 @@
         "assets/tiles/bm_map.tmx"
     ],
     "tileset.embedInMap": true,
+    "tileset.lastUsedFilter": "Todos los archivos (*)",
     "tileset.spacing": 1
 }

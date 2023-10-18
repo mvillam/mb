@@ -12,12 +12,11 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/tmw_desert_spacing.png
-  AssetGenImage get tmwDesertSpacing =>
-      const AssetGenImage('assets/images/tmw_desert_spacing.png');
+  /// File path: assets/images/tile.png
+  AssetGenImage get tile => const AssetGenImage('assets/images/tile.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [tmwDesertSpacing];
+  List<AssetGenImage> get values => [tile];
 }
 
 class $AssetsTilesGen {
