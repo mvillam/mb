@@ -1,7 +1,5 @@
-# mb
+# MiniBattle
 
-MiniBatle a Flutter & Flame project  
-
-## MiniBatle
+MiniBattle is a Flutter & Flame project  
 
 
