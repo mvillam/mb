@@ -1,52 +1,46 @@
 import 'package:flame/components.dart';
+import 'package:flame/geometry.dart';
 import 'package:flutter/painting.dart';
-import 'package:mb/constants.dart';
+import 'package:mb/components/line_component.dart';
 
-class MarkerComponent extends PositionComponent {
-  MarkerComponent(Vector2 position, Vector2 size,
-      [this.color = const Color(0xFF000000)])
-      : super(
-            anchor: Anchor.center,
-            position: position,
-            size: size,
-            priority: 100);
 
-  factory MarkerComponent.red(Vector2 position, Vector2 size) =>
-      MarkerComponent(
-        position,
-        size,
-        const Color(0xFFFF0000),
-      );
+enum MarkerType { line, triangle, circle, rectangle }
 
-  factory MarkerComponent.green(Vector2 position, Vector2 size) =>
-      MarkerComponent(
-        position,
-        size,
-        const Color(0xFF00FF00),
-      );
+class MarkerComponent extends PositionComponent with HasVisibility{
+  late Paint paint;
+  Color color;
+  MarkerType type;
 
-  factory MarkerComponent.blue(Vector2 position, Vector2 size) =>
-      MarkerComponent(
-        position,
-        size,
-        const Color(0xFF0000FF),
-      );
-
-  final Color color;
-
-  @override
-  void onLoad() {
-    final Paint paint = Paint();
+  MarkerComponent(
+      {super.position,
+      super.size,
+      this.type = MarkerType.circle,
+      this.color = const Color.fromRGBO(255, 0, 0, 1)}) {
+    anchor = Anchor.center;
+    paint = Paint();
     paint.color = color;
     paint.strokeWidth = 2;
     paint.style = PaintingStyle.stroke;
-    List<Vector2> vlist=[Vector2(worldTileSize/2,0),Vector2(worldTileSize,worldTileSize),Vector2(0,worldTileSize)];
-    addAll(
-      [RectangleComponent(position: position,size: size,paint: paint),
-      PolygonComponent(vlist,position:position,
-        paint: paint,
-        size: size,
-      )]
-    );
+    priority = 100;
+  }
+
+  @override
+  void onLoad() {
+    switch (type) {
+      case MarkerType.line:
+        add(LineComponent(segment: LineSegment(position,Vector2(position.x,position.y- size.y/2)),paint: paint));
+        break;
+      case MarkerType.triangle:
+        List<Vector2> list = [Vector2(0, size.y),Vector2(size.x/2, 0), size];
+        add(PolygonComponent(list,anchor: Anchor.center,
+            position: position, paint: paint, size: size, priority: priority));
+        break;
+      case MarkerType.circle:
+        add(CircleComponent(anchor: Anchor.center,position: position,radius: size.x/2,paint: paint,priority: priority));
+        break;
+      case MarkerType.rectangle:
+        add(RectangleComponent(anchor: Anchor.center,position: position,size: size,paint: paint,priority: priority));
+        break;
+    }
   }
 }
