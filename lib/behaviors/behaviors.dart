@@ -36,8 +36,6 @@ class GoToBehavior extends Behavior {
     } else {
       desired = (target - element.position).normalized() * speed;
     }
-
-    element.lookAt(target);
     Vector2 steering = (desired - element.velocity);
     return steering;
   }
@@ -63,8 +61,6 @@ class EvadeBehavior extends Behavior {
         speed = mapRange(perceptionDist, 0,0 , maxVelocity, dist);
         desired = (-targetElement.position + element.position).normalized() * speed;
     }
-    element.lookAt(targetElement.position);
-    element.angle +=math.pi;
     Vector2 steering = (desired - element.velocity);
     return steering;
   }
@@ -93,7 +89,6 @@ class FollowBehavior extends Behavior {
     } else {
       desired = (targetElement.position - element.position).normalized() * speed;
     }
-    element.lookAt(targetElement.position);
     Vector2 steering = (desired - element.velocity);
     return steering;
   }

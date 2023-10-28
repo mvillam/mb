@@ -32,15 +32,17 @@ class ElementComponent extends PositionComponent
     super.update(dt);
     double w_2 = worldTileSize/2;
     Vector2 w_2_v = Vector2(w_2,w_2);
-    velocity= Vector2(0, 0);
+    velocity.x=0;
+    velocity.y=0;
     Vector2 acc = Vector2(0, 0);
     for (Behavior b in behaviors) {
       acc.add(b.move(dt));
-      velocity.add(acc);
-      velocity.clampScalar(-maxVelocity, maxVelocity);
-      position.add(velocity);
-      position.clamp(Vector2(w_2,w_2), Vector2(maxWorldSizeX-w_2,maxWorldSizeY-w_2));
+      lookAt(position+acc);
     }
+    velocity.add(acc);
+    velocity.clampScalar(-maxVelocity, maxVelocity);
+    position.add(velocity);
+    position.clamp(Vector2(w_2,w_2), Vector2(maxWorldSizeX-w_2,maxWorldSizeY-w_2));
   }
 
   void addBehavior(Behavior b) {

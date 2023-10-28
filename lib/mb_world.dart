@@ -40,7 +40,7 @@ class MBWorld extends World with HasGameRef<MBGame> {
     e_0.addBehavior(GoToBehavior(e_0,target: Vector2(50*worldTileSize,50*worldTileSize),perceptionDist: worldTileSize*50, maxVelocity: worldTileSize/5));
     map.add(e_0);
 
-    for (double x = 2; x < 100; x+=5) {
+    for (double x = 2; x < 10; x+=5) {
       for (double y = 0; y < 10; y++) {
         ElementComponent e = ElementComponent(
             position: Vector2(x, y),
