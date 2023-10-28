@@ -2,11 +2,12 @@ import 'dart:math' as math;
 import 'package:flame/components.dart';
 import 'package:mb/components/element_component.dart';
 import 'package:mb/constants.dart';
+import 'package:mb/utilities/utilities.dart';
 
-class Behavior {
+class Behavior with Utilities{
   ElementComponent element;
   Behavior(this.element);
-  mapRange(a1, a2, b1, b2, s) => (b1 + (s - a1) * (b2 - b1) / (a2 - a1));
+
 
   Vector2 move(double dt) {
     return Vector2(0, 0);
@@ -34,7 +35,7 @@ class GoToBehavior extends Behavior {
         desired = (target - element.position).normalized() * speed;
       }
     } else {
-      desired = (target - element.position).normalized() * speed;
+      desired = (target - element.position).normalized() * speed*dt;
     }
     Vector2 steering = (desired - element.velocity);
     return steering;
@@ -59,7 +60,7 @@ class EvadeBehavior extends Behavior {
     Vector2 desired = Vector2(0, 0);
     if (dist < perceptionDist) {
         speed = mapRange(perceptionDist, 0,0 , maxVelocity, dist);
-        desired = (-targetElement.position + element.position).normalized() * speed;
+        desired = (-targetElement.position + element.position).normalized() * speed*dt;
     }
     Vector2 steering = (desired - element.velocity);
     return steering;
@@ -84,12 +85,42 @@ class FollowBehavior extends Behavior {
     if (dist < perceptionDist) {
       if (dist > 0.05) {
         speed = mapRange(perceptionDist, 0, maxVelocity, 0, dist);
-        desired = (targetElement.position- element.position).normalized() * speed;
+        desired = (targetElement.position- element.position).normalized() * speed*dt;
       }
     } else {
-      desired = (targetElement.position - element.position).normalized() * speed;
+      desired = (targetElement.position - element.position).normalized() * speed*dt;
     }
     Vector2 steering = (desired - element.velocity);
     return steering;
   }
+}
+
+class WanderBehavior extends Behavior with Utilities{
+  double maxVelocity;
+  double wanderAng;
+  double wanderAngVariation;
+  double wanderRadius;
+      math.Random randomSrc;
+  double wanderPointCenterDist;
+
+  WanderBehavior(super.element,{required this.randomSrc , required this.maxVelocity,this.wanderRadius =10*worldTileSize,this.wanderPointCenterDist=2 *worldTileSize,this.wanderAng=0,this.wanderAngVariation =0.3});
+
+  @override
+  Vector2 move(double dt) {
+    double speed = maxVelocity;
+
+    wanderAng +=doubleInRange(randomSrc,-wanderAngVariation,wanderAngVariation);
+
+    Vector2 wanderPoint = element.velocity.clone();
+    wanderPoint.scaleTo(wanderPointCenterDist);
+    wanderPoint.add(element.position);
+
+    double x =wanderRadius *math.cos(wanderAng);
+    double y =wanderRadius *math.sin(wanderAng);
+
+    wanderPoint.add(Vector2(x, y));
+    Vector2 steering = (wanderPoint-element.position).normalized()*speed*dt;
+    return steering;
+  }
+
 }

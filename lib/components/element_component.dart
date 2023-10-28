@@ -12,6 +12,7 @@ class ElementComponent extends PositionComponent
   List<MarkerComponent> marks = [];
   List<Behavior> behaviors = [];
   double maxVelocity = worldTileSize * 4;
+  double maxForce = worldTileSize * 2;
   Vector2 velocity = Vector2(0, 0);
 
   ElementComponent({super.position, super.size,this.color=const Color.fromRGBO(255, 0, 0, 1)}) {
@@ -31,14 +32,15 @@ class ElementComponent extends PositionComponent
   void update(double dt) {
     super.update(dt);
     double w_2 = worldTileSize/2;
-    Vector2 w_2_v = Vector2(w_2,w_2);
     velocity.x=0;
     velocity.y=0;
     Vector2 acc = Vector2(0, 0);
     for (Behavior b in behaviors) {
       acc.add(b.move(dt));
       lookAt(position+acc);
+
     }
+    acc.clampScalar(-maxForce, maxForce);
     velocity.add(acc);
     velocity.clampScalar(-maxVelocity, maxVelocity);
     position.add(velocity);
