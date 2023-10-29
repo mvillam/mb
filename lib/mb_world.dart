@@ -3,9 +3,11 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame/src/effects/provider_interfaces.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:mb/behaviors/behaviors.dart';
 import 'package:mb/components/element_component.dart';
+import 'package:mb/components/path_component.dart';
 import 'package:mb/gen/assets.gen.dart';
 import 'package:mb/mb_game.dart';
 
@@ -19,7 +21,7 @@ class MBWorld extends World with HasGameRef<MBGame> {
   );
 
   Vector2 toWorldPosition(double x, double y) =>
-      Vector2((x + 1) * worldTileSize / 2, (y + 1) * worldTileSize / 2);
+      Vector2(x  * worldTileSize+worldTileSize/2, y  * worldTileSize +worldTileSize/2);
 
   MBWorld({super.children});
 
@@ -33,14 +35,30 @@ class MBWorld extends World with HasGameRef<MBGame> {
     map.anchor = Anchor.topLeft;
     add(map);
 
+
+    List<Vector2> points = [];
+    points.add(toWorldPosition(20, 20));
+    points.add(toWorldPosition(25, 70));
+    points.add(toWorldPosition(50, 60));
+    points.add(toWorldPosition(75, 90));
+    points.add(toWorldPosition(15, 90));
+    PathComponent pathComponent = PathComponent(points);
+    map.add(pathComponent);
+
     ElementComponent e_0 = ElementComponent(
-        position: Vector2(50, 50),
+        position: Vector2(5, 5),
         size: Vector2(worldTileSize, worldTileSize),color: const Color.fromRGBO(0, 0, 255, 1));
-    e_0.addBehavior(WanderBehavior(e_0,randomSrc:rnd,maxVelocity: worldTileSize*5, wanderAng: math.pi/30,wanderAngVariation: math.pi/36));
+   // e_0.addBehavior(WanderBehavior(e_0,randomSrc:rnd,maxVelocity: worldTileSize*10, wanderAng: math.pi/30,wanderAngVariation: math.pi/36));
+    //e_0.addBehavior(GoToBehavior(e_0,maxVelocity:worldTileSize*5,target: toWorldPosition(50, 50)));
+
+    e_0.addBehavior(FollowPathBehavior(e_0,maxVelocity:worldTileSize*5,points: points));
     map.add(e_0);
-/*
-    for (double x = 2; x < 10; x+=5) {
-      for (double y = 0; y < 10; y++) {
+
+
+
+
+    /*for (double x = 2; x < 5; x+=5) {
+      for (double y = 0; y < 5; y++) {
         ElementComponent e = ElementComponent(
             position: Vector2(x, y),
             size: Vector2(worldTileSize, worldTileSize));
@@ -50,8 +68,8 @@ class MBWorld extends World with HasGameRef<MBGame> {
         map.add(e);
 
       }
-    }
-*/
+    }*/
+
   /*  MarkerComponent m = MarkerComponent(
         position: toWorldPosition(50, 50),
         size: Vector2(worldTileSize, worldTileSize),
@@ -59,9 +77,10 @@ class MBWorld extends World with HasGameRef<MBGame> {
     map.add(m);*/
 
 
-
+    //game.camera.viewfinder.visibleGameSize = Vector2(100*worldTileSize, 100*worldTileSize);
     game.camera.viewfinder.zoom = 0.25;
-    game.camera.moveTo(toWorldPosition(50, 50));
+   //game.camera.moveTo(toWorldPosition(50, 50));
+    game.camera.follow(e_0);
   }
 
   void setCameraBounds(Vector2 gameSize) {

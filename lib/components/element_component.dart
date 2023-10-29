@@ -38,15 +38,37 @@ class ElementComponent extends PositionComponent
     for (Behavior b in behaviors) {
       acc.add(b.move(dt));
       lookAt(position+acc);
-
     }
     acc.clampScalar(-maxForce, maxForce);
     velocity.add(acc);
     velocity.clampScalar(-maxVelocity, maxVelocity);
     position.add(velocity);
+    //borders();
+
     position.clamp(Vector2(w_2,w_2), Vector2(maxWorldSizeX-w_2,maxWorldSizeY-w_2));
   }
 
+
+  void borders()
+  {
+    double w_2 = worldTileSize/2;
+    if(position.x>maxWorldSizeX-w_2)
+      {
+        position.x = w_2;
+      }
+    else if(position.x< w_2)
+      {
+        position.x =maxWorldSizeX-w_2;
+      }
+    if(position.y>maxWorldSizeY-w_2)
+    {
+      position.y = w_2;
+    }
+    else if(position.y< w_2)
+    {
+      position.y =maxWorldSizeY-w_2;
+    }
+  }
   void addBehavior(Behavior b) {
     behaviors.add(b);
   }
