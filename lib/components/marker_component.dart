@@ -26,17 +26,18 @@ class MarkerComponent extends PositionComponent with HasVisibility{
 
   @override
   void onLoad() {
+    Vector2 s_2= size/2;
     switch (type) {
       case MarkerType.line:
         add(LineComponent(segment: LineSegment(position,Vector2(position.x,position.y- size.y/2)),paint: paint));
         break;
       case MarkerType.triangle:
-        List<Vector2> list = [Vector2(0, size.y),Vector2(size.x/2, 0), size];
+        List<Vector2> list = [Vector2(-s_2.x, size.y),Vector2(s_2.x, size.y), Vector2(0,  0)];
         add(PolygonComponent(list,anchor: Anchor.center,
             position: position, paint: paint, size: size, priority: priority));
         break;
       case MarkerType.circle:
-        add(CircleComponent(anchor: Anchor.center,position: position,radius: size.x/2,paint: paint,priority: priority));
+        add(CircleComponent(anchor: Anchor.center,position: position-s_2,radius: size.x/2,paint: paint,priority: priority));
         break;
       case MarkerType.rectangle:
         add(RectangleComponent(anchor: Anchor.center,position: position,size: size,paint: paint,priority: priority));

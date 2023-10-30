@@ -32,10 +32,34 @@ class GoToBehavior extends Behavior {
     if (dist < perceptionDist) {
       if (dist > 0.05) {
         speed = mapRange(perceptionDist, 0, maxVelocity, 0, dist);
-        desired = (target - element.position).normalized() * speed;
+        desired = (target - element.position).normalized() * speed*dt;
       }
     } else {
       desired = (target - element.position).normalized() * speed * dt;
+    }
+    Vector2 steering = (desired - element.velocity);
+    return steering;
+  }
+}
+
+
+class SeekBehavior extends Behavior {
+  late ElementComponent targetElement;
+  double perceptionDist;
+
+  SeekBehavior(super.element,
+      {required this.targetElement,
+        required super.maxVelocity,
+        this.perceptionDist = worldTileSize * 10});
+
+  @override
+  Vector2 move(double dt) {
+    double speed = maxVelocity;
+    double dist = targetElement.position.distanceTo(element.position);
+    Vector2 desired = Vector2(0, 0);
+    if (dist < perceptionDist) {
+      desired =
+          (targetElement.position - element.position).normalized() * speed * dt;
     }
     Vector2 steering = (desired - element.velocity);
     return steering;
@@ -68,6 +92,7 @@ class EvadeBehavior extends Behavior {
   }
 }
 
+
 class FollowBehavior extends Behavior {
   late ElementComponent targetElement;
   double perceptionDist;
@@ -96,6 +121,36 @@ class FollowBehavior extends Behavior {
     Vector2 steering = (desired - element.velocity);
     return steering;
   }
+}
+
+class FollowRelativeBehavior extends FollowBehavior{
+  Vector2 relativePosition;
+  FollowRelativeBehavior(super.element, {required super.targetElement,required this.relativePosition, required super.maxVelocity});
+
+  @override
+  Vector2 move(double dt) {
+    double speed = maxVelocity;
+    Vector2 target =targetElement.position+relativePosition;
+
+
+    double dist = target.distanceTo(element.position);
+
+    Vector2 desired = Vector2(0, 0);
+    if (dist < perceptionDist) {
+      if (dist > 0.05) {
+        speed = mapRange(perceptionDist, 0, maxVelocity, 0, dist);
+        desired = (target - element.position).normalized() *
+            speed *
+            dt;
+      }
+    } else {
+      desired =
+          (target - element.position).normalized() * speed * dt;
+    }
+    Vector2 steering = (desired - element.velocity);
+    return steering;
+  }
+
 }
 
 class WanderBehavior extends Behavior {

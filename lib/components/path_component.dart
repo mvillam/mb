@@ -53,7 +53,7 @@ class PathComponent extends PositionComponent{
 
   @override
   void render(Canvas canvas) {
-    canvas.drawPath(path, borderPaint);
+    //canvas.drawPath(path, borderPaint);
     canvas.drawPath(path, mainPaint);
   }
   
