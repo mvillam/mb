@@ -17,11 +17,10 @@ class ElementComponent extends PositionComponent
 
   ElementComponent({super.position, super.size,this.color=const Color.fromRGBO(255, 0, 0, 1)}) {
     anchor = Anchor.center;
-   // position= Vector2((position.x+1)*worldTileSize,(position.y+1)*worldTileSize);
     MarkerComponent mt = MarkerComponent(
         position:size/2,
         size: size,
-        type: MarkerType.triangle,color: color);
+        type: MarkerType.circle,color: color);
     marks.addAll([mt]);
     for (MarkerComponent m in marks) {
       add(m);

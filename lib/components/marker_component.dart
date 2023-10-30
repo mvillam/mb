@@ -37,7 +37,7 @@ class MarkerComponent extends PositionComponent with HasVisibility{
             position: position, paint: paint, size: size, priority: priority));
         break;
       case MarkerType.circle:
-        add(CircleComponent(anchor: Anchor.center,position: position-s_2,radius: size.x/2,paint: paint,priority: priority));
+        add(CircleComponent(anchor: Anchor.center,position: position,radius: size.x/2,paint: paint,priority: priority));
         break;
       case MarkerType.rectangle:
         add(RectangleComponent(anchor: Anchor.center,position: position,size: size,paint: paint,priority: priority));
