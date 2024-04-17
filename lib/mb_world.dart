@@ -1,15 +1,12 @@
-import 'dart:math' as math;
-import 'dart:ui';
+//import 'dart:math' as math;
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/palette.dart';
-import 'package:flame/src/effects/provider_interfaces.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:mb/behaviors/behaviors.dart';
 import 'package:mb/components/element_component.dart';
-import 'package:mb/components/path_component.dart';
 import 'package:mb/gen/assets.gen.dart';
 import 'package:mb/mb_game.dart';
 
@@ -35,7 +32,7 @@ class MBWorld extends World with HasGameRef<MBGame>, TapCallbacks {
 
   @override
   Future<void> onLoad() async {
-    final math.Random rnd = math.Random();
+   // final math.Random rnd = math.Random();
     map = await TiledComponent.load(
         Assets.tiles.bmMap, Vector2.all(worldTileSize),
         prefix: '');
@@ -65,11 +62,11 @@ class MBWorld extends World with HasGameRef<MBGame>, TapCallbacks {
 
 
 
-    double maxVelocity = worldTileSize *6;
     int rows = 5;
     int columns =5;
+   /* double maxVelocity = worldTileSize *6;
     double colDist =worldTileSize*2;
-    double rowDist =worldTileSize*2;
+    double rowDist =worldTileSize*2;*/
 
     List<List<ElementComponent>> unit =[];
     for (double x = 0; x < columns; x++) {
@@ -109,7 +106,7 @@ class MBWorld extends World with HasGameRef<MBGame>, TapCallbacks {
 
     //game.camera.viewfinder.visibleGameSize = Vector2(100*worldTileSize, 100*worldTileSize);
     game.camera.viewfinder.zoom = 0.15;
-   //game.camera.moveTo(toWorldPosition(50, 50));
+    game.camera.moveTo(toWorldPosition(50, 50));
    // game.camera.follow(e_0);
   }
 

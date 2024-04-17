@@ -34,7 +34,7 @@ class MBGame extends FlameGame with ScrollDetector, ScaleDetector {
   late double startZoom;
 
   @override
-  void onScaleStart(_) {
+  void onScaleStart(info) {
     startZoom = camera.viewfinder.zoom;
   }
 
